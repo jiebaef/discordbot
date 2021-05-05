@@ -1,6 +1,6 @@
 # discordbot
 
-## Setting up the bot
+## Setup
 1. head to "discordbot/DiscordBot/DiscordBot"
 2. create a file called "config.yml"
 3. insert:
