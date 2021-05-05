@@ -1,12 +1,9 @@
-﻿using System;
+﻿using System.Threading.Tasks;
 
 namespace DiscordBot
 {
-    class Program
+    internal class Program
     {
-        static void Main(string[] args)
-        {
-            
-        }
+        public static async Task Main(string[] args) => await Startup.RunAsync(args);
     }
 }
