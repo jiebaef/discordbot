@@ -1,7 +1,7 @@
 ﻿using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
-using System;
+using Microsoft.Extensions.Logging;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -9,6 +9,10 @@ namespace DiscordBot.Modules
 {
     public class General : ModuleBase
     {
+        private readonly ILogger<General> Logger;
+
+        public General(ILogger<General> logger) => Logger = logger;
+
         [Command("ping")]
         public async Task Ping()
         {
@@ -20,12 +24,14 @@ namespace DiscordBot.Modules
         {
             if (user == null)
                 user = Context.User as SocketGuildUser;
-
             var channel = Context.Channel as SocketTextChannel;
+
+            var name = user.Username;
+
 
             var builder = new EmbedBuilder()
                 .WithThumbnailUrl(user.GetAvatarUrl() ?? user.GetDefaultAvatarUrl())
-                .WithDescription("In this message you can see some information about yourself!")
+                .WithDescription($"In this message you can see some information about {name}!")
                 .WithColor(new Color(33, 176, 252))
                 .AddField("User ID", user.Id, true)
                 .AddField("Created at", user.CreatedAt.ToString("dd/MM/yyyy"), true)
@@ -36,20 +42,6 @@ namespace DiscordBot.Modules
             var embed = builder.Build();
 
             await channel.SendMessageAsync(null, false, embed);
-        }
-
-        [Command("purge")]
-        [RequireUserPermission(GuildPermission.ManageMessages)]
-        public async Task Purge(int amount)
-        {
-            var channel = Context.Channel as SocketTextChannel;
-
-            var messages = await channel.GetMessagesAsync(amount + 1).FlattenAsync();
-            await channel.DeleteMessagesAsync(messages);
-
-            var message = await channel.SendMessageAsync($"{messages.Count()} messages were deleted successfully!");
-            await Task.Delay((int)2.5 * 1000);
-            await message.DeleteAsync();
         }
 
         [Command("server")]
@@ -70,6 +62,15 @@ namespace DiscordBot.Modules
             var embed = builder.Build();
 
             await channel.SendMessageAsync(null, false, embed);
+        }
+
+        [Command("test")]
+        public async Task Test()
+        {
+            var user = Context.User as SocketGuildUser;
+
+            await ReplyAsync("Testing this function");
+            Logger.LogInformation($"{user.Username} tested this function");
         }
     }
 }

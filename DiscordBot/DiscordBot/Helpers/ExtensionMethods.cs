@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace DiscordBot
+namespace DiscordBot.Helpers
 {
     public static class ExtensionMethods
     {
